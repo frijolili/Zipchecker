@@ -8,15 +8,16 @@ class Comprobador:
     def comprobar(self, codigo):
 
         codigo = codigo.strip()
+
         if not codigo:
             return "VACIO"
-            
+
         if codigo in self.escaneadas:
             return "DUPLICADA"
 
+        self.escaneadas.add(codigo)
+
         if codigo in self.base:
             return "MALA"
-
-        self.escaneadas.add(codigo)
 
         return "BUENA"

@@ -114,7 +114,7 @@ class VentanaPrincipal(ctk.CTk):
             column=0,
             pady=(10, 20)
         )
-    #---------------------------------------------
+    #-------------FRAME LECTOR----------------
 
 
     def crear_frame_lector(self):

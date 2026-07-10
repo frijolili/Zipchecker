@@ -1,0 +1,19 @@
+# Caché de Python
+__pycache__/
+*.py[cod]
+
+# Datos de trabajo
+datos/
+resultados/
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# VS Code
+.vscode/
+
+# Windows
+Thumbs.db
+Desktop.ini

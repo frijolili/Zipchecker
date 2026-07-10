@@ -1,6 +1,8 @@
 import customtkinter as ctk
 from logica.gestor_excel import GestorExcel
+from logica.comprobador import Comprobador
 from tkinter import filedialog
+
 
 # APARIENCIA PRINCIPAL 
 
@@ -15,6 +17,8 @@ class VentanaPrincipal(ctk.CTk):
 
 
         self.gestor_excel = GestorExcel()
+        self.comprobador = None
+
         self.configurar_ventana()
         self.crear_widgets()
 
@@ -38,6 +42,7 @@ class VentanaPrincipal(ctk.CTk):
         self.crear_frame_lector()
         self.crear_frame_estadisticas()
         
+    #---------------------------------------------
 
     def crear_frame_superior(self):
         self.frame_superior = ctk.CTkFrame(self)
@@ -58,14 +63,14 @@ class VentanaPrincipal(ctk.CTk):
         titulo.pack(pady=20)
 
         
- 
+    #---------------------------------------
 
     def crear_frame_base(self):
 
-        # 1. Crear el frame
+        # 1. Creo frame
         self.frame_base = ctk.CTkFrame(self)
 
-        # 2. Colocarlo
+        # 2. lo coloco XD
         self.frame_base.grid(
             row=1,
             column=0,
@@ -76,7 +81,7 @@ class VentanaPrincipal(ctk.CTk):
 
         self.frame_base.grid_columnconfigure(0, weight=1)
 
-        # 3. Crear el título
+        # 3. le pongo título
         titulo = ctk.CTkLabel(
             self.frame_base,
             text="Base de datos",
@@ -85,7 +90,7 @@ class VentanaPrincipal(ctk.CTk):
 
         titulo.grid(row=0, column=0, pady=(15, 5))
 
-        # 4. Crear la etiqueta
+        # 4. Creo la etiqueta
         self.label_base = ctk.CTkLabel(
             self.frame_base,
             text="Base cargada: Ninguna"
@@ -97,7 +102,7 @@ class VentanaPrincipal(ctk.CTk):
             pady=5
         )
 
-        # 5. Crear el botón
+        # 5. Creo el botón
         self.boton_cargar = ctk.CTkButton(
             self.frame_base,
             text="Seleccionar Excel",
@@ -109,8 +114,11 @@ class VentanaPrincipal(ctk.CTk):
             column=0,
             pady=(10, 20)
         )
+    #---------------------------------------------
+
 
     def crear_frame_lector(self):
+
         self.frame_lector = ctk.CTkFrame(self)
 
         self.frame_lector.grid(
@@ -120,7 +128,35 @@ class VentanaPrincipal(ctk.CTk):
             pady=10,
             sticky="nsew"
         )
-        
+
+        self.frame_lector.grid_columnconfigure(0, weight=1)
+
+        titulo = ctk.CTkLabel(
+            self.frame_lector,
+            text="Lector QR",
+            font=("Arial", 20, "bold")
+        )
+
+        titulo.grid(row=0, column=0, pady=(15, 5))
+
+        self.entry_codigo = ctk.CTkEntry(
+            self.frame_lector,
+            placeholder_text="Escanea una pieza..."
+        )
+
+       
+        self.entry_codigo.bind("<Return>", self.comprobar_codigo)
+
+        self.entry_codigo.grid(
+            row=1,
+            column=0,
+            padx=20,
+            pady=(5, 20),
+            sticky="ew"
+        )
+    #-------------------------------------------
+
+
     def seleccionar_excel(self):
 
         ruta = filedialog.askopenfilename(
@@ -129,13 +165,33 @@ class VentanaPrincipal(ctk.CTk):
         )
 
         if not ruta:
-         return
+            return
 
         total = self.gestor_excel.cargar_excel(ruta)
+
+        self.comprobador = Comprobador(
+            self.gestor_excel.trazabilidades
+        )
 
         self.label_base.configure(
             text=f"Base cargada: {total} registros"
         )
+
+    #-----------------------------------------
+
+    def comprobar_codigo(self, event):
+
+        codigo = self.entry_codigo.get()
+
+        resultado = self.comprobador.comprobar(codigo)
+
+        print(resultado)
+
+        self.entry_codigo.delete(0, "end")
+        self.entry_codigo.focus()
+  
+
+    #-----------------------------------------    
 
     def crear_frame_estadisticas(self):
         self.frame_estadisticas = ctk.CTkFrame(self)

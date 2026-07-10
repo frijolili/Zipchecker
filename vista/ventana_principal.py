@@ -143,9 +143,14 @@ class VentanaPrincipal(ctk.CTk):
             self.frame_lector,
             placeholder_text="Escanea una pieza..."
         )
-
        
         self.entry_codigo.bind("<Return>", self.comprobar_codigo)
+
+        self.label_resultado = ctk.CTkLabel(
+            self.frame_lector,
+            text="Esperando lectura...",
+            font=("Arial", 24, "bold")
+        )
 
         self.entry_codigo.grid(
             row=1,
@@ -153,6 +158,13 @@ class VentanaPrincipal(ctk.CTk):
             padx=20,
             pady=(5, 20),
             sticky="ew"
+        )
+
+
+        self.label_resultado.grid(
+            row=2,
+            column=0,
+            pady=(0, 20)
         )
     #-------------------------------------------
 
@@ -185,7 +197,9 @@ class VentanaPrincipal(ctk.CTk):
 
         resultado = self.comprobador.comprobar(codigo)
 
-        print(resultado)
+        self.label_resultado.configure(
+            text=resultado
+        )
 
         self.entry_codigo.delete(0, "end")
         self.entry_codigo.focus()

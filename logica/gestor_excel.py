@@ -4,16 +4,16 @@ import pandas as pd
 class GestorExcel:
 
     def __init__(self):
-        self.base_datos = set()
+        self.trazabilidades = set()
 
-    def cargar_excel(self, ruta_archivo):
+    def cargar_excel(self, ruta):
 
-        df = pd.read_excel(ruta_archivo)
+        df = pd.read_excel(ruta)
 
-        self.base_datos = set(
-            df.iloc[:,0]
+        self.trazabilidades = set(
+            df.iloc[:, 0]
             .astype(str)
             .str.strip()
-    )
+        )
 
-    return len(self.base_datos)
+        return len(self.trazabilidades)

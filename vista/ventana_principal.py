@@ -1,6 +1,9 @@
 import customtkinter as ctk
+from logica.gestor_excel import GestorExcel
+from tkinter import filedialog
 
-# Configuración global de la apariencia
+# APARIENCIA PRINCIPAL 
+
 ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("blue")
 
@@ -11,7 +14,7 @@ class VentanaPrincipal(ctk.CTk):
         super().__init__()
 
 
-        #self.gestor_excel = GestorExcel()
+        self.gestor_excel = GestorExcel()
         self.configurar_ventana()
         self.crear_widgets()
 
@@ -30,13 +33,10 @@ class VentanaPrincipal(ctk.CTk):
 
     def crear_widgets(self):
 
-          self.crear_frame_superior()
-
-          self.crear_frame_base()
-
-          self.crear_frame_lector()
-
-          self.crear_frame_estadisticas()
+        self.crear_frame_superior()
+        self.crear_frame_base()
+        self.crear_frame_lector()
+        self.crear_frame_estadisticas()
         
 
     def crear_frame_superior(self):
@@ -62,14 +62,52 @@ class VentanaPrincipal(ctk.CTk):
 
     def crear_frame_base(self):
 
+        # 1. Crear el frame
         self.frame_base = ctk.CTkFrame(self)
 
+        # 2. Colocarlo
         self.frame_base.grid(
-        row=1,
-        column=0,
-        padx=20,
-        pady=10,
-        sticky="nsew"
+            row=1,
+            column=0,
+            padx=20,
+            pady=10,
+            sticky="nsew"
+        )
+
+        self.frame_base.grid_columnconfigure(0, weight=1)
+
+        # 3. Crear el título
+        titulo = ctk.CTkLabel(
+            self.frame_base,
+            text="Base de datos",
+            font=("Arial", 20, "bold")
+        )
+
+        titulo.grid(row=0, column=0, pady=(15, 5))
+
+        # 4. Crear la etiqueta
+        self.label_base = ctk.CTkLabel(
+            self.frame_base,
+            text="Base cargada: Ninguna"
+        )
+
+        self.label_base.grid(
+            row=1,
+            column=0,
+            pady=5
+        )
+
+        # 5. Crear el botón
+        self.boton_cargar = ctk.CTkButton(
+            self.frame_base,
+            text="Seleccionar Excel",
+            command=self.seleccionar_excel
+        )
+
+        self.boton_cargar.grid(
+            row=2,
+            column=0,
+            pady=(10, 20)
         )
 
     def crear_frame_lector(self):
@@ -83,7 +121,21 @@ class VentanaPrincipal(ctk.CTk):
             sticky="nsew"
         )
         
+    def seleccionar_excel(self):
 
+        ruta = filedialog.askopenfilename(
+            title="Selecciona la base de datos",
+            filetypes=[("Archivos Excel", "*.xlsx")]
+        )
+
+        if not ruta:
+         return
+
+        total = self.gestor_excel.cargar_excel(ruta)
+
+        self.label_base.configure(
+            text=f"Base cargada: {total} registros"
+        )
 
     def crear_frame_estadisticas(self):
         self.frame_estadisticas = ctk.CTkFrame(self)

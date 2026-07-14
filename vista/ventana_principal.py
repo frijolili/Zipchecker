@@ -1,7 +1,9 @@
 import customtkinter as ctk
 from logica.gestor_excel import GestorExcel
 from logica.comprobador import Comprobador
+from logica.exportador import Exportador
 from tkinter import filedialog
+
 
 
 # APARIENCIA PRINCIPAL 
@@ -22,6 +24,10 @@ class VentanaPrincipal(ctk.CTk):
         self.configurar_ventana()
         self.crear_widgets()
 
+        self.gestor_excel = GestorExcel()
+        self.comprobador = None
+        self.exportador = Exportador()
+
     def configurar_ventana(self):
         self.title("Comprobador de Trazabilidad")
 
@@ -38,7 +44,7 @@ class VentanaPrincipal(ctk.CTk):
     def crear_widgets(self):
 
         self.crear_frame_superior()
-        self.crear_frame_base()
+        self.crear_frame_archivos()
         self.crear_frame_lector()
         self.crear_frame_estadisticas()
         
@@ -63,15 +69,14 @@ class VentanaPrincipal(ctk.CTk):
         titulo.pack(pady=20)
 
         
-    #---------------------------------------
+    #------AQUÍ PONGO EL EXCEL DE LA BASE Y EL DE ESCRIBIR------------------
 
-    def crear_frame_base(self):
+    def crear_frame_archivos(self):
 
-        # 1. Creo frame
-        self.frame_base = ctk.CTkFrame(self)
+    # Frame principal
+        self.frame_archivos = ctk.CTkFrame(self)
 
-        # 2. lo coloco XD
-        self.frame_base.grid(
+        self.frame_archivos.grid(
             row=1,
             column=0,
             padx=20,
@@ -79,30 +84,54 @@ class VentanaPrincipal(ctk.CTk):
             sticky="nsew"
         )
 
-        self.frame_base.grid_columnconfigure(0, weight=1)
+        self.frame_archivos.grid_columnconfigure(0, weight=1)
+        self.frame_archivos.grid_columnconfigure(1, weight=1)
 
-        # 3. le pongo título
+        # Título
         titulo = ctk.CTkLabel(
-            self.frame_base,
-            text="Base de datos",
+            self.frame_archivos,
+            text="Archivos",
             font=("Arial", 20, "bold")
         )
 
-        titulo.grid(row=0, column=0, pady=(15, 5))
+        titulo.grid(
+            row=0,
+            column=0,
+            columnspan=2,
+            pady=(15, 10)
+        )
 
-        # 4. Creo la etiqueta
+    # -------------------------
+    # FRAME BASE
+    # -------------------------
+
+        self.frame_base = ctk.CTkFrame(self.frame_archivos)
+
+        self.frame_base.grid(
+             row=1,
+            column=0,
+            padx=10,
+            pady=10,
+            sticky="nsew"
+        )
+
+        self.frame_base.grid_columnconfigure(0, weight=1)
+
+        titulo_base = ctk.CTkLabel(
+            self.frame_base,
+            text="Base de datos",
+            font=("Arial", 16, "bold")
+        )
+
+        titulo_base.grid(row=0, column=0, pady=(10,5))
+
         self.label_base = ctk.CTkLabel(
             self.frame_base,
             text="Base cargada: Ninguna"
         )
 
-        self.label_base.grid(
-            row=1,
-            column=0,
-            pady=5
-        )
+        self.label_base.grid(row=1, column=0, pady=5)
 
-        # 5. Creo el botón
         self.boton_cargar = ctk.CTkButton(
             self.frame_base,
             text="Seleccionar Excel",
@@ -112,8 +141,40 @@ class VentanaPrincipal(ctk.CTk):
         self.boton_cargar.grid(
             row=2,
             column=0,
-            pady=(10, 20)
+            pady=(10,15)
         )
+
+    # -------------------------
+    # FRAME RESULTADOS
+    # -------------------------
+
+        self.frame_resultados = ctk.CTkFrame(self.frame_archivos)
+
+        self.frame_resultados.grid(
+            row=1,
+            column=1,
+            padx=10,
+            pady=10,
+            sticky="nsew"
+        )
+
+        self.frame_resultados.grid_columnconfigure(0, weight=1)
+
+        titulo_resultados = ctk.CTkLabel(
+            self.frame_resultados,
+            text="Resultados",
+            font=("Arial",16,"bold")
+        )
+
+        titulo_resultados.grid(row=0, column=0, pady=(10,5))
+
+        self.label_resultados = ctk.CTkLabel(
+            self.frame_resultados,
+            text="Ningún archivo seleccionado"
+        )
+
+        self.label_resultados.grid(row=1, column=0, pady=5)
+        
     #-------------FRAME LECTOR----------------
 
 

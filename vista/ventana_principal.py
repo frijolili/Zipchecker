@@ -3,6 +3,7 @@ from logica.gestor_excel import GestorExcel
 from logica.comprobador import Comprobador
 from logica.exportador import Exportador
 from tkinter import filedialog
+from pathlib import Path
 
 
 
@@ -48,7 +49,7 @@ class VentanaPrincipal(ctk.CTk):
         self.crear_frame_lector()
         self.crear_frame_estadisticas()
         
-    #---------------------------------------------
+    #--------------------ESPACIO PARA TÍTULO-------------------
 
     def crear_frame_superior(self):
         self.frame_superior = ctk.CTkFrame(self)
@@ -101,9 +102,9 @@ class VentanaPrincipal(ctk.CTk):
             pady=(15, 10)
         )
 
-    # -------------------------
-    # FRAME BASE
-    # -------------------------
+    
+    
+    # ------------ FRAME BASE ESCOGIDA-------------
 
         self.frame_base = ctk.CTkFrame(self.frame_archivos)
 
@@ -144,9 +145,9 @@ class VentanaPrincipal(ctk.CTk):
             pady=(10,15)
         )
 
-    # -------------------------
-    # FRAME RESULTADOS
-    # -------------------------
+    
+
+    # ----------FRAME EXCEL RESULTADOS------------
 
         self.frame_resultados = ctk.CTkFrame(self.frame_archivos)
 
@@ -174,6 +175,38 @@ class VentanaPrincipal(ctk.CTk):
         )
 
         self.label_resultados.grid(row=1, column=0, pady=5)
+
+        self.boton_resultados = ctk.CTkButton(
+            self.frame_resultados,
+            text="Abrir resultados",
+            command=self.seleccionar_resultados
+        )
+
+        self.boton_resultados.grid(
+            row=2,
+            column=0,
+            pady=(10, 15)
+        )
+
+
+    def seleccionar_resultados(self):
+
+        ruta = filedialog.askopenfilename(
+            title="Selecciona el Excel de resultados",   
+            filetypes=[("Archivos Excel", "*.xlsx")]
+        )   
+
+        if not ruta:
+            return
+
+        self.exportador.abrir_excel(ruta)
+
+        nombre = Path(ruta).name
+
+        self.label_resultados.configure(
+            text=f"{nombre}\n🟢 Conectado"
+        )
+    
         
     #-------------FRAME LECTOR----------------
 
@@ -266,7 +299,7 @@ class VentanaPrincipal(ctk.CTk):
         self.entry_codigo.focus()
   
 
-    #-----------------------------------------    
+    #------------------ESPACIO PARA DATOS ESCANEADOS-----------------------    
 
     def crear_frame_estadisticas(self):
         self.frame_estadisticas = ctk.CTkFrame(self)

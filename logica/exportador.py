@@ -10,7 +10,12 @@ class Exportador:
         self.hoja = None
         self.fila_actual = None
         self.abierto = False
-    
+
+    #----escoge si quieres crear un excel    
+    def crear_excel(self, ruta):
+        self.ruta = ruta
+
+    #----este es para une excel que ya existe 
     def abrir_excel(self, ruta):
 
         self.ruta = ruta
@@ -23,14 +28,28 @@ class Exportador:
 
         return True
 
-    def crear_excel(self, ruta):
-        self.ruta = ruta
 
+    #----en caso de que cojas uno que ya existe, te busca donde escribir 
+    def buscar_siguiente_fila(
+        self.fila_actual = self.hoja.max_row + 1
+    )
+    
+    
+    #----guarda el resultado con las columnas que queremos 
     def guardar_resultado(
         self,
         trazabilidad,
         resultado,
-        referencia,
-        caja
-    ):
-        pass
+        referencia=None,
+        caja=None, 
+        etiqueta=None
+    )
+
+    def guardar(
+        self.libro.save(self.ruta)
+    )
+        
+
+
+
+    
